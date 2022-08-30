@@ -1,6 +1,4 @@
-# CETSA
-#### Michael Ronzetti, NIH/NCATS/UMD 
-
+RT-CETSA R Analysis
 ____________________________________________________________
 ## Packages Needed:
 -library(tidyverse)
@@ -92,31 +90,3 @@ ____________________________________________________________
   
   - dr.thermogram()
 ____________________________________________________________  
-## To Do List (long..)
-
-### Current
-
-  [ ] Fix heatmaps to handle temperatures not integers.
-  [X] Kelvin to Celsius
-  [X] Compute AUC for each model. 
-  [X] Dose-response thermogram
-  [X] Control analysis also looks at positive control.
-  [X] RSS Diff vs. p-val
-  [X] Max Param Diff vs. RSS Diff
-  [X] Plot of compounds thermogram parameters vs RSS diff, colored by p-val in one, either, or none.
-  [X] EC50 @ Max RSS Difference in thermogram
-  [X] EC50 and p-value heatmaps for parameters
-  [X] Control Comparison
-
-### MoltenProt Handling
-
-  [ ] Ability to handle different models coming in from moltenprot, or pivot to irreversible model
-  [ ] Can we do QC on some of the parameters, slopes, baselines?
-  [X] Analysis of different baseline handling options
-  
-### DRC
-
-  [ ] Detect and handle outliers in data
-  [ ] Curve quality calling
-  [ ] Ability to fit difference classes of curves using drc
-  [ ] Inter and intra plate replicates
