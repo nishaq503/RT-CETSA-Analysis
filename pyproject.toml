@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "rt-cetsa-analysis"
+version = "0.1.0"
+description = ""
+authors = ["agerardin <antoine.gerardin@gmail.com>"]
+packages = [{include = "process_plate", from = "src"}]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+scikit-image = "^0.23.2"
+bfio = "^2.3.6"
+matplotlib = "^3.8.4"
+scikit-learn = "^1.4.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

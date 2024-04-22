@@ -27,20 +27,25 @@ SizeRegionPerWell_y = 40;
 % opens first image in the time series, allows image parameters to be determined
 % file name can be changed if needed, ie: systematic naming convention
 % changes for another instrument
+
+%%% Read TIFF
 Im_1 = imread('1.tif');
 
 % determines if image is RGB format grayscale (3x 8-bit channels).
 % extracts 1 channel for further analysis
+%%% get image dim, select first channel if necessary
 if size(Im_1, 3) > 1
    Im_1 = Im_1(:,:,1); 
 end
 
 % find im values for display
+%%% Get min and max intensity for scaling I imagine. (uneccessary for us)
 Im_1_PixInt_Min = min(Im_1(:));
 Im_1_PixInt_Max = max(Im_1(:));
 
 
 % user selects points to define grid layout
+%%% Not quite sure what this is... Some manual boxing it seems
 h_f1 = figure, imshow(Im_1,[])
 
 uiwait(msgbox('select center of upper left well with mouse then hit enter', 'modal'))
@@ -52,14 +57,20 @@ uiwait(msgbox('select center of upper right well with mouse then hit enter', 'mo
 uiwait(msgbox('select center of lower right well with mouse then hit enter', 'modal'))
 [LR_x, LR_y] = getpts(h_f1)
 
+%%% ok so select center of different wells.
+
 % plot points for confirmation
+%%% set a mask of the image size
 Im_1_points = false(size(Im_1));
+%%% Set the selected point values to True
 Im_1_points(uint16(UL_y),uint16(UL_x))=1;
 Im_1_points(uint16(UR_y),uint16(UR_x))=1;
 Im_1_points(uint16(LR_y),uint16(LR_x))=1;
 
+%%%  display for user confirmation
 % figure, imshow(Im_1_points,[]), title('selected corner points')
 
+%%% choose plates types and derives associated cols and rows
 PlateChoice_List = {'96 well','384 well','1536 well'};
 [PlateChoice_Index,PlateChoice_tf] = listdlg('ListString',PlateChoice_List,'PromptString',{'Select your plate type.',''},'SelectionMode','single');
 
@@ -76,7 +87,7 @@ NumTotalRow_List = [8; 16; 32];
 NumTotalRow_First = 1;
 NumTotalRow_Last = NumTotalRow_List(PlateChoice_Index);
 
-
+%%% Then we can select which area we are interested in
 prompt = {'Enter first row coordinate selected:','Enter first column coordinate selected:','Enter last row coordinate selected:','Enter last column coordinate selected:'};
 dlgtitle = 'Input';
 dims = [1 35];
@@ -88,32 +99,41 @@ NumTotalCol_First = str2num(cell2mat(answer_PlateCoord(2)));
 NumTotalRow_Last = str2num(cell2mat(answer_PlateCoord(3)));
 NumTotalCol_Last = str2num(cell2mat(answer_PlateCoord(4)));
 
+%%% get all tiffs (one per timeslice)
 Tif_File_List_1 = ls ('*.tif');
 
 % number of timepoints based on number of image files in time series.
+
+%%% buffer : one value per well (mean intensity - maybe corrected it is unclear)
 Num_TimePoints = size(Tif_File_List_1,1);
 OutputNumbers_MeanInt_Uncorrected = uint16(zeros(((NumTotalCol_Last-NumTotalCol_First)*(NumTotalRow_Last-NumTotalRow_First)),Num_TimePoints));
 OutputNumbers_MeanInt_SubtractBG = OutputNumbers_MeanInt_Uncorrected;
 
+%%% Instantiate mask to apply over the image
 Mask_Outline_Single = false(SizeRegionPerWell_y+1,SizeRegionPerWell_x+1);
 Mask_Outline_Single(:,1)=1;
 Mask_Outline_Single(:,end)=1;
 Mask_Outline_Single(1,:)=1;
 Mask_Outline_Single(end,:)=1;
 
+
+%%% So for each time slices (each tiff)
 % loop for time points
 for Count_Time = 1:Num_TimePoints
     % Count_Time = 1;
     
     Count_Time
     
+    %%% Insdantiate the output values for each time slice
     Output_PlateLayout_1 = uint16(zeros(NumTotalRow_List(PlateChoice_Index),NumTotalCol_List(PlateChoice_Index))); 
     
-    
+    %%% tif are indexed by order they are taken apparently
     myfilename = sprintf('%d.tif', Count_Time);
-  
+    
+    %%% read image
     Im_1 = imread(myfilename);
-  
+    
+    %%% select first channnel still
     % determines if image is RGB format grayscale (3x 8-bit channels).
     % extracts 1 channel for further analysis
     if size(Im_1,3) > 1
@@ -122,15 +142,18 @@ for Count_Time = 1:Num_TimePoints
 
     % set output couter to zero for each grid position (biological sample)
     Count_Output = 0;
-        
+    
+    %%% just for visualization
     % increase size of points for display of central well region position on image   
     Im_1_points_dil = imdilate(Im_1_points, strel('disk',1));
     % figure, imshow(Im_1_points_dil,[])
 
+    %%% Not clear why we need to compute the angle
     % y scale is backward becuase it is an image, flips sign of slope
     Line_UL_UR_slope = (UL_y - UR_y) / (UL_x - UR_x);
     Line_UL_UR_degrees = atand(Line_UL_UR_slope);
 
+    %%% The image is rotated not sure at all why?
     % corrects for any rotation of the image,
     % based on user selected sample positions
     Im_2 = imrotate(Im_1, Line_UL_UR_degrees);
