@@ -58,6 +58,19 @@ def hough_transform_lines(image):
     plt.tight_layout()
     plt.show()
 
+def rotate(origin, point, angle):
+    """
+    Rotate a point counterclockwise by a given angle around a given origin.
+
+    The angle should be given in radians.
+    """
+    ox, oy = origin
+    px, py = point
+
+    qx = ox + math.cos(angle) * (px - ox) - math.sin(angle) * (py - oy)
+    qy = oy + math.sin(angle) * (px - ox) + math.cos(angle) * (py - oy)
+    return qx, qy
+
 def hough_transform_ellipsis(image):
     edges = canny(image, sigma=2.0, low_threshold=0.55, high_threshold=0.8)
 
@@ -100,7 +113,7 @@ def hough_transform_ovals(image):
     accums, cx, cy, radii = hough_circle_peaks(hough_res, hough_radii, total_num_peaks=900)
 
     wells = np.sort(np.column_stack((cx, cy)),axis=0)
-    
+
     # uniques = np.unique(wells)
 
 
@@ -118,11 +131,32 @@ def hough_transform_ovals(image):
     # rect = approximate_polygon(corners_arr, tolerance=0.02)
     # plt.imshow(rect, cmap=plt.cm.gray)
     # plt.show()
+    
+
 
     corners_top = sorted(corners , key=lambda c : c[1])
     top_left, top_right = corners_top[0], corners_top[1]
+
+
+    width = math.sqrt((top_right[1] - top_left[1])**2 + (top_right[0] - top_left[0])**2)
+    print(f"width : {width}")
+
+
     slope = (top_left[1] - top_right[1]) / (top_left[0] - top_right[0]);
     angle = math.degrees(math.atan(slope));
+    
+
+    corners_left = sorted(corners , key=lambda c : c[0])
+    # TODO pny work in this projection
+    top_left, bottom_left = corners_left[1], corners_left[0]
+    
+
+    height = math.sqrt((top_left[1] - bottom_left[1])**2 + (top_left[0] - bottom_left[0])**2)
+    print(f"height : {height}")
+
+    y = top_left[1] - bottom_left[1] / (top_left[0] - bottom_left[0])
+    x = np.array([(center_y - top_left[1]) / (center_x - top_left[0]) for (center_x,center_y) in zip(cx, cy)])
+    coords_y = np.dot(x, y) / np.dot(y, y)
 
     corners_arr = np.array(corners)
     center_x, center_y = np.sum(corners_arr, axis=0) / 4
@@ -131,10 +165,10 @@ def hough_transform_ovals(image):
 
     # image = rotate(image, 45, center=(center_x, center_y))
    # image = rotate(image, angle, center=top_left)
-    image = rotate(image, angle)
+    # image = rotate(image, angle)
 
-    plt.imshow(image, cmap=plt.cm.gray)
-    plt.show()
+    # plt.imshow(image, cmap=plt.cm.gray)
+    # plt.show()
 
     
 
@@ -152,32 +186,89 @@ def hough_transform_ovals(image):
 
     id = 1
 
-    plt.imshow(image_norm, cmap=plt.cm.gray)
-    plt.show()
+    # plt.imshow(image, cmap=plt.cm.gray)
+    # plt.show()
 
-    mask = np.zeros(image.shape)
+    mask = np.zeros(image.shape, dtype=int)
+
+    # TODO last thing is to order them by increasing x, then increasing y so we have the id in order.
+    width_step = width / 24
+    height_step = height / 16
     for center_y, center_x, radius in zip(cy, cx, radii):
+        # FAIL to translate to coordinates
+        # _center_x, _center_y = rotate((top_left[0],top_left[1]),(center_x,center_y),math.radians(angle))
+        # col_x = ( _center_x - top_left[0])
+        # col = math.floor( col_x / width_step)
+        # row_y = (_center_y - top_left[1])
+        # row = math.floor( row_y / height_step)
+
+        # assert(col >= 0), col
+        # assert(row >=0), row
+
+        # print(f"coords : ({col,row})")
+
         rr, cc = disk((center_y, center_x), radius, shape=image.shape)
-        mask[rr, cc] = id
+        if mask[center_y, center_x] != 0:
+            mask[rr, cc] = mask[center_y, center_x]
+            # mask[rr+1, cc+1] = mask[center_y, center_x]
+            # mask[rr-1, cc-1] = mask[center_y, center_x]
+            # TODO DILATE TO TAKE BOUNDARIES
+            print(f"found existing circle with value {mask[center_y, center_x]}")
+        else:
+            mask[rr, cc] = id
+            id += 1
+
+        # mask[rr, cc] = id
         # id += 1
 
+    unqID,idx,IDsums = np.unique(mask,return_counts=True,return_inverse=True)
+
+    
     # mask = rotate(mask, angle, center=top_left)
-    mask = rotate(mask, angle)
-    ax.imshow(mask, cmap=plt.cm.gray)
-    plt.show()
+    # mask = rotate(mask, angle, preserve_range=True)
+
+    unqID,idx,IDsums = np.unique(mask,return_counts=True,return_inverse=True)
+
+    # plt.imshow(mask, cmap=plt.cm.gray)
+    # plt.show()
+    
+    # not  working well
+    # background = np.ma.masked_where(mask == 0, image)
+    background = image - mask
+
+    
+
+
+    # plt.imshow(background, cmap=plt.cm.gray)
+    # plt.show()
+    
+    background_value = np.mean(background)
+    # background_value = np.ma.median(background)
+    # hist = np.histogram(background, bins=[0,10])
+    # background_value = hist[0]
+    # cutoff = math.ceil(5 * np.prod(background.shape) / 100)
+    # background_sorted = np.sort(background)
+    # background_value = background_sorted[:cutoff].mean()
 
     # filtered_image = np.where(image, mask, 0)
     # filtered_image = image_norm[mask.astype(bool)].reshape(image.shape)
-    filtered_image = np.ma.masked_where(mask == 1, image_norm)
-    plt.imshow(filtered_image, cmap=plt.cm.gray)
-    plt.show()
+    # filtered_image = np.ma.masked_where(mask == 1, image_norm)
+    # plt.imshow(filtered_image, cmap=plt.cm.gray)
+    # plt.show()
+
+
+    # mask = rotate(mask, angle, preserve_range=True)
+    # image = rotate(image, angle, preserve_range=True)
 
     unqID,idx,IDsums = np.unique(mask,return_counts=True,return_inverse=True)
-    value_sums = np.bincount(idx,image_norm.ravel())
-    {i:(IDsums[itr],value_sums[itr]) for itr,i in enumerate(unqID)}
+    values_sums = np.bincount(idx,image.ravel())
+    value_means = values_sums / IDsums 
+    value_means_corrected = value_means - background_value
+    object_index = {i:(IDsums[itr],value_means_corrected[itr]) for itr,i in enumerate(unqID) if i!=0}
 
-    image = color.gray2rgb(image_norm)
+    image = color.gray2rgb(image)
     for center_y, center_x, radius in zip(cy, cx, radii):
+        # start 1 as first bucket contains background pixels
         circy, circx = circle_perimeter(center_y, center_x, radius, shape=image.shape)
         image[circy, circx] = (220, 20, 20)
 
