@@ -243,7 +243,7 @@ def hough_transform_ovals(image):
     # plt.show()
     
     background_value = np.mean(background)
-    # background_value = np.ma.median(background)
+    background_value = np.ma.median(background)
     # hist = np.histogram(background, bins=[0,10])
     # background_value = hist[0]
     # cutoff = math.ceil(5 * np.prod(background.shape) / 100)
@@ -260,6 +260,7 @@ def hough_transform_ovals(image):
     # mask = rotate(mask, angle, preserve_range=True)
     # image = rotate(image, angle, preserve_range=True)
 
+    # labeled masks => return unique values
     unqID,idx,IDsums = np.unique(mask,return_counts=True,return_inverse=True)
     values_sums = np.bincount(idx,image.ravel())
     value_means = values_sums / IDsums 
