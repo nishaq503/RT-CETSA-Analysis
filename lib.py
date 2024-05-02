@@ -30,7 +30,7 @@ PLATE_DIMS = {
     PlateSize.SIZE_1536: (32, 48),
 }
 
-""" y component of the 2D rotation matrix for each degree in [0,180)."""
+""" y component of the 2D rotation matrix for each degree in [0,pi)."""
 ROTATION = np.vstack(
     [
         -np.sin(np.arange(0, np.pi, np.pi / 180)),
@@ -95,7 +95,7 @@ def get_plate_params(image: np.ndarray) -> PlateParams:
     transform = locations @ ROTATION
 
     # Find the rotation that aligns the long edge of the plate horizontally
-    angle = np.argmin(transform.max(axis=0) - transform.min(axis=0))
+    angle = np.argmax(transform.max(axis=0) - transform.min(axis=0))
 
     # Shortest rotation to alignment
     if angle > 90:

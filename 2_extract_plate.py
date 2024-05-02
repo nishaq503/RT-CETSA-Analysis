@@ -12,10 +12,11 @@ from tifffile import imread
 
 from lib import get_plate_params, get_wells
 
-
+DATA_ROOT_DIR = "/Users/gerardinad/Documents/data/rt_cetsa_data"
 IMAGE_PATH = Path(
-    "/home/jovyan/work/RT-CETSA-Analysis/.data/Data for Nick/20210318 LDHA compound plates/20210318 LDHA compound plate 1 6K cells/1.tif"
+    f"{DATA_ROOT_DIR}/20210318 LDHA compound plates/20210318 LDHA compound plate 1 6K cells/1.tif"
 )
+
 image = imread(IMAGE_PATH)
 
 params = get_plate_params(image)
