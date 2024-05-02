@@ -9,6 +9,7 @@ from skimage.transform import rotate
 
 
 class PlateSize(Enum):
+    """"Plate Size processed by the pipeline."""
     SIZE_6 = 6
     SIZE_12 = 12
     SIZE_24 = 24
@@ -18,6 +19,7 @@ class PlateSize(Enum):
     SIZE_1536 = 1536
 
 
+"""Plate Dimensions or each plate size."""
 PLATE_DIMS = {
     PlateSize.SIZE_6: (2, 3),
     PlateSize.SIZE_12: (3, 4),
@@ -28,6 +30,7 @@ PLATE_DIMS = {
     PlateSize.SIZE_1536: (32, 48),
 }
 
+""" y component of the 2D rotation matrix for each degree in [0,180)."""
 ROTATION = np.vstack(
     [
         -np.sin(np.arange(0, np.pi, np.pi / 180)),
@@ -59,7 +62,7 @@ class PlateParams(BaseModel):
 def get_wells(image: np.ndarray) -> tuple[list[float], list[float], list[float], int]:
     """Get well locations and radii.
 
-    Since RT-CETSA are generally high signal to noise, no need for anything fance
+    Since RT-CETSA are generally high signal to noise, no need for anything fancy
     to detect wells. Simple Otsu threshold to segment the well, image labeling,
     and estimation of radius based off of area (assuming the area is a circle).
 
