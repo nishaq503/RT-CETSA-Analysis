@@ -57,12 +57,10 @@ uiwait(msgbox('select center of upper right well with mouse then hit enter', 'mo
 uiwait(msgbox('select center of lower right well with mouse then hit enter', 'modal'))
 [LR_x, LR_y] = getpts(h_f1)
 
-%%% ok so select center of different wells.
 
 % plot points for confirmation
 %%% set a mask of the image size
 Im_1_points = false(size(Im_1));
-%%% Set the selected point values to True
 Im_1_points(uint16(UL_y),uint16(UL_x))=1;
 Im_1_points(uint16(UR_y),uint16(UR_x))=1;
 Im_1_points(uint16(LR_y),uint16(LR_x))=1;
@@ -148,12 +146,10 @@ for Count_Time = 1:Num_TimePoints
     Im_1_points_dil = imdilate(Im_1_points, strel('disk',1));
     % figure, imshow(Im_1_points_dil,[])
 
-    %%% Not clear why we need to compute the angle
     % y scale is backward becuase it is an image, flips sign of slope
     Line_UL_UR_slope = (UL_y - UR_y) / (UL_x - UR_x);
     Line_UL_UR_degrees = atand(Line_UL_UR_slope);
 
-    %%% The image is rotated not sure at all why?
     % corrects for any rotation of the image,
     % based on user selected sample positions
     Im_2 = imrotate(Im_1, Line_UL_UR_degrees);
@@ -183,27 +179,31 @@ for Count_Time = 1:Num_TimePoints
 
     % Rotated_WellCenters_PerPlate_Xmin = (Im_2_points_props(1).Centroid(1));
     % Rotated_WellCenters_PerPlate_Xmax = (Im_2_points_props(2).Centroid(1));
-
+    
+    %%%XY min and Xmax of well centers
     Rotated_WellCenters_PerPlate_Xmin = min(Rotated_WellCenters_XY(:,1));
     Rotated_WellCenters_PerPlate_Xmax = max(Rotated_WellCenters_XY(:,1));
 
+    %%% width of the plate
     Rotated_WellCenters_PerPlate_Xdist = Rotated_WellCenters_PerPlate_Xmax - Rotated_WellCenters_PerPlate_Xmin;
 
+    %%% distance between two wells
     Rotated_WellDistance_X = Rotated_WellCenters_PerPlate_Xdist / ((NumTotalCol_Last - NumTotalCol_First));
 
 
     % Rotated_WellCenters_PerPlate_Ymin = (Im_2_points_props(1).Centroid(2));
     % Rotated_WellCenters_PerPlate_Ymax = (Im_2_points_props(3).Centroid(2));
 
+    %%% Y min and Ymax of well centers
     Rotated_WellCenters_PerPlate_Ymin = min(Rotated_WellCenters_XY(:,2));
     Rotated_WellCenters_PerPlate_Ymax = max(Rotated_WellCenters_XY(:,2));
 
-
+    %%% height
     Rotated_WellCenters_PerPlate_Ydist = Rotated_WellCenters_PerPlate_Ymax - Rotated_WellCenters_PerPlate_Ymin;
 
     Rotated_WellDistance_Y = Rotated_WellCenters_PerPlate_Ydist / ((NumTotalRow_Last - NumTotalRow_First));
 
-
+    %%% half way betwen wells
     SizeRegionPerWell_x_HalfDist = (SizeRegionPerWell_x/2);
     SizeRegionPerWell_y_HalfDist = (SizeRegionPerWell_y/2);
 
@@ -225,7 +225,7 @@ for Count_Time = 1:Num_TimePoints
               CountCol = CountCol + 1;
 
               Count_Well_Per_Time = Count_Well_Per_Time + 1;
-
+              %%% find well center
               SingleWell_Center_X = uint16(((C2-1)*Rotated_WellDistance_X) + Rotated_WellCenters_PerPlate_Xmin);
               SingleWell_Center_Y = uint16(((C1-1)*Rotated_WellDistance_Y) + Rotated_WellCenters_PerPlate_Ymin);
 
@@ -237,6 +237,7 @@ for Count_Time = 1:Num_TimePoints
                 
               % Extract single sample region and convert to 16 bit: makes data consistent across different
               % input types
+              %%% so now adapt the well region to each image plate
               Im_2_SingleWell = Im_2(uint16((SingleWell_Center_Y - SizeRegionPerWell_y_HalfDist)):uint16((SingleWell_Center_Y + SizeRegionPerWell_y_HalfDist)), uint16((SingleWell_Center_X - SizeRegionPerWell_x_HalfDist)):uint16((SingleWell_Center_X + SizeRegionPerWell_x_HalfDist)));
               % figure, imshow(Im_2_SingleWell,[]), title(strcat('r', num2str(CountRow), ' ', 'c', num2str(CountCol)))
 
@@ -246,6 +247,7 @@ for Count_Time = 1:Num_TimePoints
                % figure, imshow(Im_2_SingleWell_MedFilt,[])
 
               % threshold local region 
+              %%% return threshold and effectiveness metric of the threshold
               [Thrsh,Thrsh_EM] = graythresh(Im_2_SingleWell_MedFilt);
 
               % select lowest 5% of pixels, then measure median to estimate

@@ -39,30 +39,17 @@ temperature_range = [37, 90]
 # Write a csv file
 with open(".data/output/plate.csv", "w") as fw:
 
-    # Write the headers
-    headers = ["Temperature"]
-    # order by col, then row
-    # TODO we probably want the reverse
+    headers = []
     for y, x in product(range(len(params.Y)),range(len(params.X))):
         headers.append(index_to_battleship(x, y, params.size))
     fw.write(",".join(headers) + "\n")
 
-    for index, files in fp(pydantic_output=False):
-        for file in files:
-            # Get the temperature
-            # NOTE expect the temperature to grow linearly which is not exactly the case
-            # TODO CHECK where are the label coming from?
-            # must have some metadata about temperature
-            temp = temperature_range[0] + (index["index"] - 1) / (len(fp) - 1) * (
-                temperature_range[1] - temperature_range[0]
-            )
-            plate = [f"{temp:.1f}"]
-            with BioReader(file) as br:
-                image = br.read()
+    for index, files in sorted(fp(pydantic_output=False), key=lambda x: x[0]['index']):
+        with BioReader(files[0]) as br:
+            image = br.read()
+            time_step = [
+                extract_intensity(image, params.X[x], params.Y[y], R)
+                for y, x in product(range(len(params.Y)), range(len(params.X)))
+            ]
+            fw.write(",".join([str(p) for p in time_step]) + "\n")                        
 
-                for y, x in product(range(len(params.Y)), range(len(params.X))):
-                    intensity = extract_intensity(image, params.X[x], params.Y[y], R)
-                    print(intensity)
-                    plate.append(intensity)
-
-            fw.write(",".join([str(p) for p in plate]) + "\n")

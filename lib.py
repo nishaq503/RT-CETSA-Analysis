@@ -132,6 +132,9 @@ def get_plate_params(image: np.ndarray) -> PlateParams:
     # NOTE Get the coordinate for each well
     # TODO not clear
     # Get X and Y indices
+    # print(cx)
+    # print(cy)
+
     points = []
     for p, mval in zip([cy, cx], [int(cy_min), int(cx_min)]):
         z_pos = list(p)
@@ -140,6 +143,8 @@ def get_plate_params(image: np.ndarray) -> PlateParams:
         z_count = 1
         Z = [z_pos[0]]
         for z in z_pos[1:]:
+            # take any point from within a thied of the radius as belonging to the 
+            # same row,col
             if abs(Z[z_index] - z) < radii_mean // 3:
                 Z[z_index] = (Z[z_index] * z_count + z) / (z_count + 1)
                 z_count += 1
@@ -190,7 +195,7 @@ def extract_intensity(image: np.ndarray, x: int, y: int, r: int) -> int:
     background.sort()
 
     # Subtract lowest pixel values from average center pixel values
-    return int(np.mean(patch) - np.mean(background[: int(0.05 * background.size)]))
+    return int(np.mean(patch) - np.median(background[: int(0.05 * background.size)]))
 
 
 def index_to_battleship(x: int, y: int, size: PlateSize) -> str:
