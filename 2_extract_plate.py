@@ -11,10 +11,17 @@ from skimage.transform import rotate
 from tifffile import imread
 
 from lib import get_plate_params, get_wells
+from dotenv import load_dotenv, find_dotenv
+import os
+env_file_path = find_dotenv()
+load_dotenv(env_file_path, override=True)
 
-DATA_ROOT_DIR = "/Users/gerardinad/Documents/data/rt_cetsa_data"
+DATA_DIR = os.getenv("DATA_DIR")
+if not DATA_DIR:
+    raise Exception("create an .env file with DATA_DIR=/path/to/data")
+
 IMAGE_PATH = Path(
-    f"{DATA_ROOT_DIR}/20210318 LDHA compound plates/20210318 LDHA compound plate 1 6K cells/1.tif"
+    f"{DATA_DIR}/20210318 LDHA compound plates/20210318 LDHA compound plate 1 6K cells/1.tif"
 )
 
 image = imread(IMAGE_PATH)

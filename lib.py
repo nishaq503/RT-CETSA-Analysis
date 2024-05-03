@@ -95,7 +95,7 @@ def get_plate_params(image: np.ndarray) -> PlateParams:
     transform = locations @ ROTATION
 
     # Find the rotation that aligns the long edge of the plate horizontally
-    angle = np.argmax(transform.max(axis=0) - transform.min(axis=0))
+    angle = np.argmin(transform.max(axis=0) - transform.min(axis=0))
 
     # Shortest rotation to alignment
     if angle > 90:
@@ -109,6 +109,7 @@ def get_plate_params(image: np.ndarray) -> PlateParams:
 
     # Determine the plate layout
     n_wells = len(cx)
+
     plate_config = None
     for layout in PlateSize:
         error = abs(1 - n_wells / layout.value)
@@ -122,10 +123,14 @@ def get_plate_params(image: np.ndarray) -> PlateParams:
     radii_mean = int(np.mean(radii))
 
     # Get the bounding box after rotation
+    # NOTE 2 * radii_mean to get some padding
+    # we have radius of border so we could have used those but this should be good enough
     cx_min, cx_max = np.min(cx) - 2 * radii_mean, np.max(cx) + 2 * radii_mean
     cy_min, cy_max = np.min(cy) - 2 * radii_mean, np.max(cy) + 2 * radii_mean
     bbox = (int(cy_min), int(cy_max), int(cx_min), int(cx_max))
 
+    # NOTE Get the coordinate for each well
+    # TODO not clear
     # Get X and Y indices
     points = []
     for p, mval in zip([cy, cx], [int(cy_min), int(cx_min)]):

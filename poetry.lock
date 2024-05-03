@@ -325,6 +325,33 @@ files = [
 ]
 
 [[package]]
+name = "filepattern"
+version = "2.0.5"
+description = "Utilities for parsing files in a directory based on a file name pattern."
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "filepattern-2.0.5-cp310-cp310-macosx_10_15_x86_64.whl", hash = "sha256:5b641f5c920ecd047a5003a16bb004f818f88c16f387bf2ecc889847ca6fba5a"},
+    {file = "filepattern-2.0.5-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:f77fe4ebaa8f7a3934e8eecb4aa0444f86b4ba35f07b3fecf32fd0b25fa63b79"},
+    {file = "filepattern-2.0.5-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:0f40e841a4e27ab58f64be1ea3a5af28130900f7d2d43ca72b6243f28f754b90"},
+    {file = "filepattern-2.0.5-cp310-cp310-win_amd64.whl", hash = "sha256:c15b7ada056d9fb1bd5061e184cd71626112534c2ef4455df1f114dfb2d40a14"},
+    {file = "filepattern-2.0.5-cp311-cp311-macosx_10_15_x86_64.whl", hash = "sha256:f92113a7ef0d413cc0a9f80aebd0ce2d80106d49e04522aa51e10bc3c007a1fe"},
+    {file = "filepattern-2.0.5-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:2f65b899c079e5fd79953ffc73b9ef302d28426489559599eb6da9c0b4f3b9cf"},
+    {file = "filepattern-2.0.5-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:0b794426303db5dfbb38fbd5dfa2c1e97619e5b94603f5b44bedaf1310cb0125"},
+    {file = "filepattern-2.0.5-cp311-cp311-win_amd64.whl", hash = "sha256:23c64ab168897fdcc3bcec26e66f7bc7cbe2465ee77906660e0cadece67a0955"},
+    {file = "filepattern-2.0.5-cp38-cp38-macosx_10_15_x86_64.whl", hash = "sha256:6ec86f2b26938093b1858d2a538a6d42c1963ff82609bd92136aa18c5f5fbe6d"},
+    {file = "filepattern-2.0.5-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:983559b045bcd0ae44108d29e87ebdd46df32d801f259e75948a9b0dc6e4df10"},
+    {file = "filepattern-2.0.5-cp38-cp38-win_amd64.whl", hash = "sha256:acee4c0f42bfd44a7bc3708a295e0098bfca890c8b9deab145afbcb4aa244309"},
+    {file = "filepattern-2.0.5-cp39-cp39-macosx_10_15_x86_64.whl", hash = "sha256:e1883dc1b93c6f0349ba3417ff1ca4141b923c63630bb3d935dc081d8aaf81a1"},
+    {file = "filepattern-2.0.5-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:cbcdb6f9ea39d9be1f9a71fd0d92cc48800ba4f535c4f0fc5ca3ce9a53ebb71e"},
+    {file = "filepattern-2.0.5-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:5f481088253e9c4fbdec4154435fdaa52649caf9f10e68f1a1b2af9898ad34d6"},
+    {file = "filepattern-2.0.5-cp39-cp39-win_amd64.whl", hash = "sha256:f3268a58c53149ab36fada293991d1d4a5e4c3354f81788fb05aff54797a4766"},
+]
+
+[package.dependencies]
+pydantic = "*"
+
+[[package]]
 name = "fonttools"
 version = "4.51.0"
 description = "Tools to manipulate font files"
@@ -1387,6 +1414,20 @@ files = [
 six = ">=1.5"
 
 [[package]]
+name = "python-dotenv"
+version = "1.0.1"
+description = "Read key-value pairs from a .env file and set them as environment variables"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "python-dotenv-1.0.1.tar.gz", hash = "sha256:e324ee90a023d808f1959c46bcbc04446a10ced277783dc6ee09987c37ec10ca"},
+    {file = "python_dotenv-1.0.1-py3-none-any.whl", hash = "sha256:f7b63ef50f1b690dddf550d03497b66d609393b40b564ed0d674909a68ebf16a"},
+]
+
+[package.extras]
+cli = ["click (>=5.0)"]
+
+[[package]]
 name = "pywin32"
 version = "306"
 description = "Python for Window Extensions"
@@ -1814,4 +1855,4 @@ jupyter = ["ipytree (>=0.2.2)", "ipywidgets (>=8.0.0)", "notebook"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "6ed3ee8c2bddf037febf74912ded12699cd4257a577ca55263ef5a5bd304f7ba"
+content-hash = "d97e32b9584bd68b032ad036809ca9b777f9c524f4b70bc6b271260591129f4c"
