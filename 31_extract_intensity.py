@@ -39,7 +39,7 @@ fp = FilePattern(str(IMAGE_PATH.parent), "{index:d+}.ome.tif")
 temperature_range = [37, 90]
 temperatures = []
 
-with open("data/cleaned_expt1.csv", newline='\n') as csvfile:
+with open("/Users/antoinegerardin/Documents/data/rt-cetsa/210318_MHR Analyzed/210318_Plate1/cleaned_expt1.csv", newline='\n') as csvfile:
     results = csv.reader(csvfile, delimiter='\n')
     for row in list(results)[1:]:
         val = row[0].split(",")[0]
