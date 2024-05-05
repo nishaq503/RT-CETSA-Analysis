@@ -20,6 +20,7 @@ filename = ".data/output/plate.csv"
 # fit = MoltenProtFit(df, input_type="csv", parent_filename=filename)
 fit = MoltenProtFit(filename, input_type="csv", debug=True)
 
+
 fit.SetAnalysisOptions(
     model="santoro1988",
     baseline_fit=3,
@@ -44,5 +45,10 @@ out = fit.plate_results
 out['ind'] = out.index 
 out['letter'] = out.apply(lambda row: row.ind[:1], axis=1)
 out['number'] = out.apply(lambda row: row.ind[1:], axis=1).astype(int)
+out.drop(columns=['ind'])
 out = out.sort_values(['letter','number'])
 out.to_csv('.data/output/molten_prot_out.csv')
+
+from scipy.stats import gmean
+g_mean= gmean(out['BS_factor'].values)
+print("mean BS_factor: ", g_mean)
