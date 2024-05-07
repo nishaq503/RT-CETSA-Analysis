@@ -22,16 +22,12 @@ library(hrbrthemes)
 library(ggpubr)
 library(MESS)
 library(devtools);
-
-# # NOTE A- this not a R package!
 # load_all(".");
-
-
 #' construct_grid
-#' Construct a grid with compatible headers for MoltenProt file prep
+#' Construct a grid with compatable headers for MoltenProt file prep
 #'
 #' @param row_num Number of rows in microplate
-#' @param col_num Number of columns in microplate 
+#' @param col_num Number of columns in microplate
 #' @param pad_num Add padding 0 to well address?
 #'
 #' @return df containing the grid
@@ -45,14 +41,10 @@ construct_grid <-
            col_num = 24,
            pad_num = FALSE) {
     if (pad_num == FALSE) {
-      #NOTE A- create a dataframe, with rows for each combination of plate row,col (with row replaced by a letter)
-      # then arrange by row (probably unecessary)
       grid <-
         expand.grid(row = LETTERS[1:(row_num)], col = c(1:(col_num))) %>%
         arrange(row) %>%
-        # NOTE A- create an address column that concatenate row,col (ex: A12)
         mutate(address = paste(row, col, sep = '')) %>%
-        # "-" remove row and col columns from the dataframe?
         dplyr::select(-c('row', 'col'))
     } else {
       letter <- LETTERS[1:(row_num)]
@@ -91,8 +83,6 @@ prepMatLabforMolt <- function(file_loc = './data/rtcetsa_raw.xlsx',
   if (file.exists(file_loc) == FALSE) {
     stop('File does not exist at path supplied.')
   }
-
- # NOTE A- read spreadsheet as df
   df <-
     read_excel(
       path = file_loc,
@@ -104,28 +94,23 @@ prepMatLabforMolt <- function(file_loc = './data/rtcetsa_raw.xlsx',
     stop('Imported file is empty. Please navigate to correct RT-CETSA file')
   }
   df <- df %>%
-  # NOTE A- select columns 1 and 2 and remove them from the df
     dplyr::select(-c('...1', '...2')) %>%
-    # Transform row values to column
     rownames_to_column() %>%
     rename('well' = 'rowname')
   
   # Construct temperature index (t_n) and pivot around the data to tidy
   tracker <- 1
-  # # NOTE A- create name (t_1, T_2) for each column 
   for (val in 2:ncol(df) - 1) {
     names(df)[val + 1] <- paste('t_', val, sep = '')
     tracker <- tracker + 1
   }
   df <- df %>%
-    # NOTE A-  create a temperature column
     pivot_longer(., cols = 2:ncol(df)) %>%
     pivot_wider(names_from = well) %>%
     rename(., 'Temperature' = 'name') %>%
     mutate(., Temperature = as.integer(gsub("[^0-9.]", "", Temperature)))
   
   #Create temperature index in line with experimental parameters supplied in main script
-  # NOTE A- here temperature are linearly created on the interval!
   temperature_df <-
     seq(start_temp, end_temp, by = ((end_temp - start_temp) / (nrow(df) -
                                                                  1))) %>%
@@ -163,8 +148,6 @@ prepMatLabforMolt <- function(file_loc = './data/rtcetsa_raw.xlsx',
     colnames(q4)[val + 1] <- grid_96w$address[val]
     tracker <- tracker + 1
   }
-
-  # NOTE A- divide the data into 4 files .
   write.csv(q1, './data/cleaned_expt1.csv', row.names = FALSE)
   write.csv(q2, './data/cleaned_expt2.csv', row.names = FALSE)
   write.csv(q3, './data/cleaned_expt3.csv', row.names = FALSE)
@@ -486,7 +469,7 @@ calculate_auc <- function(df) {
   
   # Pivot and clean each row for AUC model
   for (i in 1:nrow(auc.df)) {
-    curveVals <- as.vector(auc.df[i,]) %>%
+    curveVals <- auc.df[i,] %>%
       pivot_longer(cols = everything(),
                    names_to = 'temp',
                    values_to = 'response')

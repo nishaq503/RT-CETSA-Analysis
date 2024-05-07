@@ -25,12 +25,11 @@ plate_format <- 384
 control <- 'vehicle'
 pc <- 'control'
 
-# NOTE A-  that the code to use moltenprot so we don't need that 
 # Prepare the MatLab file for MoltenProt processing
-# raw_df <-
-#   prepMatLabforMolt(file_loc = './data/example_plate.xlsx',
-#                     start_temp = startTemp,
-#                     end_temp = endTemp)
+raw_df <-
+  prepMatLabforMolt(file_loc = './data/example_plate.xlsx',
+                    start_temp = startTemp,
+                    end_temp = endTemp)
 
 # Read in the processed MoltProt data and prepare the data frames.
 full_param <- retrieveMoltenData(model = 'standard')
@@ -60,34 +59,34 @@ controlPlot <-
   )
 print(controlPlot)
 
-# #Calculate melting parameter difference for each well from MoltenProt
-# # full_df <- calculate_meltingparams(full_df) %>%
-# #   calculate_zscore() %>%
-# #   convert_zscore
+#Calculate melting parameter difference for each well from MoltenProt
+# full_df <- calculate_meltingparams(full_df) %>%
+#   calculate_zscore() %>%
+#   convert_zscore
 
-# #Derive RSS values for null and alternate model for each compound from full_df
-# rss <- compute.rss.models(full_df, rssPlot = TRUE, drPlot = TRUE, plotModel = FALSE)
+#Derive RSS values for null and alternate model for each compound from full_df
+rss <- compute.rss.models(full_df, rssPlot = TRUE, drPlot = TRUE, plotModel = FALSE)
 
-# #Perform dose-response for each thermogram parameter
-# parameters <- compute_parameter.rssmodel(full_df, plotModel = TRUE)
+#Perform dose-response for each thermogram parameter
+parameters <- compute_parameter.rssmodel(full_df, plotModel = TRUE)
 
-# #Merge these plots for further analysis
-# signif.df <- merge(rss, parameters)
-# colnames(signif.df)[9] <- 'mannwhit.pval'
-# signif.df <- determineSig(signif.df)
-# signif.df <- rankOrder(signif.df)
+#Merge these plots for further analysis
+signif.df <- merge(rss, parameters)
+colnames(signif.df)[9] <- 'mannwhit.pval'
+signif.df <- determineSig(signif.df)
+signif.df <- rankOrder(signif.df)
 
-# # Volcano plots comparing the different parameters of analysis against the NPARC RSS Difference
-# # Colored by significance test and whether the compound passes any.
-# plot_volcanos(signif.df)
+# Volcano plots comparing the different parameters of analysis against the NPARC RSS Difference
+# Colored by significance test and whether the compound passes any.
+plot_volcanos(signif.df)
 
-# # Plot of RSS Differences vs. p-values for NPARC
-# rss.pval.plot(signif.df, savePlot = TRUE)
+# Plot of RSS Differences vs. p-values for NPARC
+rss.pval.plot(signif.df, savePlot = TRUE)
 
-# #Heatmap of compounds vs. different measurement styles.
-# parameter_heatmaps(signif.df, plotHeat = TRUE)
+#Heatmap of compounds vs. different measurement styles.
+parameter_heatmaps(signif.df, plotHeat = TRUE)
 
-# #Write out signif.df and full_df
-# write.csv(x = full_df, file = './data/full_df.csv')
-# write.csv(x = signif.df, file = './data/signif_df.csv')
+#Write out signif.df and full_df
+write.csv(x = full_df, file = './data/full_df.csv')
+write.csv(x = signif.df, file = './data/signif_df.csv')
 

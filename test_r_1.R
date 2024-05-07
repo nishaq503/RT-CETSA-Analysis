@@ -3,10 +3,14 @@
 ## batches of 96 wells are stitched back 
 ## only useful data is kept
 
+## NOTE This only test the `standard` model, should the same for `irrev`
+## (filter on different columns)
+
 .First<-function() {
     require("ctest", quietly = TRUE)
     options(editor="vscode")
 }
+.First()
 
 # install.packages('tidyverse')
 # install.packages('readxl')
@@ -30,9 +34,10 @@ library(hrbrthemes)
 library(ggpubr)
 library(MESS)
 library(devtools)
-.First()
+
 
 # plate <-read.table("/Users/antoinegerardin/RT-CETSA-Analysis/.data/output/plate.csv",header=T,sep=",")
+# moltenprot data
 plate <-read_csv("/Users/antoinegerardin/RT-CETSA-Analysis/.data/output/plate.csv",col_names=T, show_col_types = FALSE)
 spec(plate)
 head(plate)
@@ -68,7 +73,7 @@ exp_param2 <- import_fit_params('./data/cleaned_expt2/Signal_resources/Signal_re
 exp_param3 <- import_fit_params('./data/cleaned_expt3/Signal_resources/Signal_results.xlsx')
 exp_param4 <- import_fit_params('./data/cleaned_expt4/Signal_resources/Signal_results.xlsx')
 
-# merge results for all experiment
+# merge results for all experiments by concatenating all rows (one per well)
 exp_param <- rbind(exp_param1, exp_param2, exp_param3, exp_param4)
 
 # write.csv(exp_param, "test_exp_param.csv")
