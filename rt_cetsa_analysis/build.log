@@ -1,89 +1,98 @@
-#1 [internal] load build definition from Dockerfile
-#1 transferring dockerfile: 1.45kB done
+#1 [internal] load .dockerignore
+#1 transferring context: 2B done
 #1 DONE 0.0s
 
-#2 [internal] load .dockerignore
-#2 transferring context: 2B done
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 2.17kB done
 #2 DONE 0.0s
 
 #3 [internal] load metadata for docker.io/library/r-base:4.4.0
-#3 ...
+#3 DONE 0.6s
 
-#4 [auth] library/r-base:pull token for registry-1.docker.io
+#4 [ 1/26] FROM docker.io/library/r-base:4.4.0@sha256:f65678c037bc1ace4c7d03de6d7c0aaba589ab49d559df156c49e40a5889a781
 #4 DONE 0.0s
 
-#3 [internal] load metadata for docker.io/library/r-base:4.4.0
-#3 DONE 1.6s
-
-#5 [ 1/21] FROM docker.io/library/r-base:4.4.0@sha256:f65678c037bc1ace4c7d03de6d7c0aaba589ab49d559df156c49e40a5889a781
+#5 [internal] load build context
+#5 transferring context: 754B done
 #5 DONE 0.0s
 
-#6 [internal] load build context
-#6 transferring context: 55.29kB done
-#6 DONE 0.0s
+#6 [ 7/26] ADD requirements/Requirements_2.R /opt/executables/Requirements_2.R
+#6 CACHED
 
-#7 [ 2/21] RUN apt-get update && apt-get install -y python3
+#7 [24/26] RUN python3 -m venv /opt/executables/.venv
 #7 CACHED
 
-#8 [ 6/21] RUN Rscript /opt/executables/Requirements_1.R
+#8 [25/26] COPY src/ /opt/executables/
 #8 CACHED
 
-#9 [13/21] ADD requirements/Requirements_4.R /opt/executables/Requirements_4.R
+#9 [ 9/26] ADD requirements/Requirements_3.R /opt/executables/Requirements_3.R
 #9 CACHED
 
-#10 [10/21] RUN Rscript /opt/executables/Requirements_3.R
+#10 [ 6/26] RUN Rscript /opt/executables/Requirements_1.R
 #10 CACHED
 
-#11 [ 7/21] ADD requirements/Requirements_2.R /opt/executables/Requirements_2.R
+#11 [21/26] COPY README.md /opt/executables
 #11 CACHED
 
-#12 [18/21] ADD requirements/Requirements_5.R /opt/executables/Requirements_5.R
+#12 [ 2/26] RUN apt-get update && apt-get install -y python3
 #12 CACHED
 
-#13 [ 8/21] RUN Rscript /opt/executables/Requirements_2.R
+#13 [10/26] RUN Rscript /opt/executables/Requirements_3.R
 #13 CACHED
 
-#14 [17/21] RUN Rscript /opt/executables/Requirements_6.R
+#14 [11/26] RUN apt-get install -y --allow-downgrades libxcb-render0=1.15-1 libxcb-shm0=1.15-1 libxcb1=1.15-1
 #14 CACHED
 
-#15 [15/21] RUN apt-get install -y libgit2-dev
+#15 [19/26] RUN Rscript /opt/executables/Requirements_5.R
 #15 CACHED
 
-#16 [ 3/21] RUN mkdir -p /opt/executables
+#16 [14/26] RUN Rscript /opt/executables/Requirements_4.R
 #16 CACHED
 
-#17 [ 4/21] RUN apt-get install -y libssl-dev     && apt-get install -y libcurl4-openssl-dev libfontconfig1-dev     && apt-get install -y libharfbuzz-dev libfribidi-dev     && apt-get install -y libxml2-dev     && apt-get install -y libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev     && apt-get install -y cmake
+#17 [17/26] RUN Rscript /opt/executables/Requirements_6.R
 #17 CACHED
 
-#18 [16/21] ADD requirements/Requirements_6.R /opt/executables/Requirements_6.R
+#18 [18/26] ADD requirements/Requirements_5.R /opt/executables/Requirements_5.R
 #18 CACHED
 
-#19 [14/21] RUN Rscript /opt/executables/Requirements_4.R
+#19 [16/26] ADD requirements/Requirements_6.R /opt/executables/Requirements_6.R
 #19 CACHED
 
-#20 [ 5/21] ADD requirements/Requirements_1.R /opt/executables/Requirements_1.R
+#20 [ 5/26] ADD requirements/Requirements_1.R /opt/executables/Requirements_1.R
 #20 CACHED
 
-#21 [ 9/21] ADD requirements/Requirements_3.R /opt/executables/Requirements_3.R
+#21 [23/26] RUN apt-get -y install python3-pip python3-venv
 #21 CACHED
 
-#22 [11/21] RUN apt-get install -y --allow-downgrades libxcb-render0=1.15-1 libxcb-shm0=1.15-1 libxcb1=1.15-1
+#22 [13/26] ADD requirements/Requirements_4.R /opt/executables/Requirements_4.R
 #22 CACHED
 
-#23 [12/21] RUN apt-get install -y  libcairo2-dev
+#23 [ 4/26] RUN apt-get install -y libssl-dev     && apt-get install -y libcurl4-openssl-dev libfontconfig1-dev     && apt-get install -y libharfbuzz-dev libfribidi-dev     && apt-get install -y libxml2-dev     && apt-get install -y libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev     && apt-get install -y cmake
 #23 CACHED
 
-#24 [19/21] RUN Rscript /opt/executables/Requirements_5.R
+#24 [12/26] RUN apt-get install -y  libcairo2-dev
 #24 CACHED
 
-#25 [20/21] COPY src/ /opt/executables/
-#25 DONE 0.0s
+#25 [22/26] RUN apt-get update && apt-get install -y python3
+#25 CACHED
 
-#26 [21/21] WORKDIR /opt/executables
-#26 DONE 0.0s
+#26 [15/26] RUN apt-get install -y libgit2-dev
+#26 CACHED
 
-#27 exporting to image
-#27 exporting layers 0.0s done
-#27 writing image sha256:ec3c54271a6e7fe7a8d092c6fa70de88e2aa3654cb2c148543951aa33fecf4b8 done
-#27 naming to docker.io/polusai/rt_cetsa_analysis:0.1 done
-#27 DONE 0.0s
+#27 [ 8/26] RUN Rscript /opt/executables/Requirements_2.R
+#27 CACHED
+
+#28 [20/26] COPY pyproject.toml /opt/executables
+#28 CACHED
+
+#29 [ 3/26] RUN mkdir -p /opt/executables
+#29 CACHED
+
+#30 [26/26] WORKDIR /opt/executables
+#30 CACHED
+
+#31 exporting to image
+#31 exporting layers done
+#31 writing image sha256:6402a7480ba7ef6f07130ae159434d03411d52ebdf157e9577903dad1b98c636 done
+#31 naming to docker.io/polusai/rt_cetsa_analysis:0.1 done
+#31 DONE 0.0s

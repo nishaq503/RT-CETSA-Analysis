@@ -40,6 +40,28 @@ RUN Rscript ${EXEC_DIR}/Requirements_6.R
 ADD requirements/Requirements_5.R ${EXEC_DIR}/Requirements_5.R
 RUN Rscript ${EXEC_DIR}/Requirements_5.R
 
+COPY pyproject.toml ${EXEC_DIR}
+COPY README.md ${EXEC_DIR}
+RUN apt-get update && apt-get install -y python3
+RUN apt-get -y install python3-pip python3-venv
+
+RUN python3 -m venv ${EXEC_DIR}/.venv
+
+## Instructions to build from source are wrong...
+# RUN apt-get -y install git
+# RUN git clone https://github.com/PolusAI/filepattern.git \
+# && cd filepattern \
+# && mkdir build_dep \
+# && cd build_dep
+# RUN bash ../ci-utils/install_prereq_linux.sh \
+# RUN export FILEPATTERN_DEP_DIR=../build_dep/local_install \
+# && python -m pip install . -vv
+
+
+# RUN ${EXEC_DIR}/.venv/bin/pip3 install -i https://pypi.org/simple/ filepattern --no-cache-dir
+# RUN ${EXEC_DIR}/.venv/bin/pip3 install ${EXEC_DIR} --no-cache-dir --no-cache-dir
+
+
 COPY src/ ${EXEC_DIR}/
 
 WORKDIR ${EXEC_DIR}

@@ -5,10 +5,41 @@ container: polusai/rt_cetsa_analysis:0.1
 description: RT Cetsa Analysis.
 entrypoint: '[python3, main.py]'
 name: polusai/RT_Cetsa_Analysis
-repository: ""
+repository: "https://github.com/ncats/RT-CETSA-Analysis"
 version: 0.1
 specVersion: 1.0.0
 inputs:
+- description: Filepattern to parse params files
+  format:
+  - pattern
+  name: params
+  required: false
+  type: string
+- description: Filepattern to parse values files
+  format:
+  - pattern
+  name: values
+  required: false
+  type: string
+- description: Filepattern to parse platemap files
+  format:
+  - pattern
+  name: platemap
+  required: false
+  type: string
+- description: Generate an output preview.
+  format:
+  - preview
+  name: preview
+  required: false
+  type: boolean
+
 outputs:
+  - description: Output Directory
+    format:
+    - directory
+    name: outDir
+    required: true
+    type: path
+
 title: RT Cetsa Analysis.
-ui:
