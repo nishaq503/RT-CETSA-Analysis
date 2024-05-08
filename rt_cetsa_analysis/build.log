@@ -1,83 +1,89 @@
-#1 [internal] load .dockerignore
-#1 transferring context: 2B done
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.45kB done
 #1 DONE 0.0s
 
-#2 [internal] load build definition from Dockerfile
-#2 transferring dockerfile: 1.45kB done
+#2 [internal] load .dockerignore
+#2 transferring context: 2B done
 #2 DONE 0.0s
 
 #3 [internal] load metadata for docker.io/library/r-base:4.4.0
-#3 DONE 0.8s
+#3 ...
 
-#4 [ 1/21] FROM docker.io/library/r-base:4.4.0@sha256:f65678c037bc1ace4c7d03de6d7c0aaba589ab49d559df156c49e40a5889a781
+#4 [auth] library/r-base:pull token for registry-1.docker.io
 #4 DONE 0.0s
 
-#5 [internal] load build context
-#5 transferring context: 55.16kB done
+#3 [internal] load metadata for docker.io/library/r-base:4.4.0
+#3 DONE 1.6s
+
+#5 [ 1/21] FROM docker.io/library/r-base:4.4.0@sha256:f65678c037bc1ace4c7d03de6d7c0aaba589ab49d559df156c49e40a5889a781
 #5 DONE 0.0s
 
-#6 [ 7/21] ADD requirements/Requirements_2.R /opt/executables/Requirements_2.R
-#6 CACHED
+#6 [internal] load build context
+#6 transferring context: 55.29kB done
+#6 DONE 0.0s
 
-#7 [15/21] RUN apt-get install -y libgit2-dev
+#7 [ 2/21] RUN apt-get update && apt-get install -y python3
 #7 CACHED
 
-#8 [11/21] RUN apt-get install -y --allow-downgrades libxcb-render0=1.15-1 libxcb-shm0=1.15-1 libxcb1=1.15-1
+#8 [ 6/21] RUN Rscript /opt/executables/Requirements_1.R
 #8 CACHED
 
-#9 [18/21] ADD requirements/Requirements_5.R /opt/executables/Requirements_5.R
+#9 [13/21] ADD requirements/Requirements_4.R /opt/executables/Requirements_4.R
 #9 CACHED
 
 #10 [10/21] RUN Rscript /opt/executables/Requirements_3.R
 #10 CACHED
 
-#11 [14/21] RUN Rscript /opt/executables/Requirements_4.R
+#11 [ 7/21] ADD requirements/Requirements_2.R /opt/executables/Requirements_2.R
 #11 CACHED
 
-#12 [ 3/21] RUN mkdir -p /opt/executables
+#12 [18/21] ADD requirements/Requirements_5.R /opt/executables/Requirements_5.R
 #12 CACHED
 
-#13 [12/21] RUN apt-get install -y  libcairo2-dev
+#13 [ 8/21] RUN Rscript /opt/executables/Requirements_2.R
 #13 CACHED
 
-#14 [ 5/21] ADD requirements/Requirements_1.R /opt/executables/Requirements_1.R
+#14 [17/21] RUN Rscript /opt/executables/Requirements_6.R
 #14 CACHED
 
-#15 [ 8/21] RUN Rscript /opt/executables/Requirements_2.R
+#15 [15/21] RUN apt-get install -y libgit2-dev
 #15 CACHED
 
-#16 [ 4/21] RUN apt-get install -y libssl-dev     && apt-get install -y libcurl4-openssl-dev libfontconfig1-dev     && apt-get install -y libharfbuzz-dev libfribidi-dev     && apt-get install -y libxml2-dev     && apt-get install -y libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev     && apt-get install -y cmake
+#16 [ 3/21] RUN mkdir -p /opt/executables
 #16 CACHED
 
-#17 [ 6/21] RUN Rscript /opt/executables/Requirements_1.R
+#17 [ 4/21] RUN apt-get install -y libssl-dev     && apt-get install -y libcurl4-openssl-dev libfontconfig1-dev     && apt-get install -y libharfbuzz-dev libfribidi-dev     && apt-get install -y libxml2-dev     && apt-get install -y libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev     && apt-get install -y cmake
 #17 CACHED
 
-#18 [17/21] RUN Rscript /opt/executables/Requirements_6.R
+#18 [16/21] ADD requirements/Requirements_6.R /opt/executables/Requirements_6.R
 #18 CACHED
 
-#19 [16/21] ADD requirements/Requirements_6.R /opt/executables/Requirements_6.R
+#19 [14/21] RUN Rscript /opt/executables/Requirements_4.R
 #19 CACHED
 
-#20 [ 9/21] ADD requirements/Requirements_3.R /opt/executables/Requirements_3.R
+#20 [ 5/21] ADD requirements/Requirements_1.R /opt/executables/Requirements_1.R
 #20 CACHED
 
-#21 [13/21] ADD requirements/Requirements_4.R /opt/executables/Requirements_4.R
+#21 [ 9/21] ADD requirements/Requirements_3.R /opt/executables/Requirements_3.R
 #21 CACHED
 
-#22 [ 2/21] RUN apt-get update && apt-get install -y python3
+#22 [11/21] RUN apt-get install -y --allow-downgrades libxcb-render0=1.15-1 libxcb-shm0=1.15-1 libxcb1=1.15-1
 #22 CACHED
 
-#23 [19/21] RUN Rscript /opt/executables/Requirements_5.R
+#23 [12/21] RUN apt-get install -y  libcairo2-dev
 #23 CACHED
 
-#24 [20/21] COPY src/ /opt/executables/
-#24 DONE 0.0s
+#24 [19/21] RUN Rscript /opt/executables/Requirements_5.R
+#24 CACHED
 
-#25 [21/21] WORKDIR /opt/executables
+#25 [20/21] COPY src/ /opt/executables/
 #25 DONE 0.0s
 
-#26 exporting to image
-#26 exporting layers 0.0s done
-#26 writing image sha256:33115510149706be0a4c37221eef559b344bdf0822d9e3420d1cf739463ab4a0 done
-#26 naming to docker.io/polusai/rt_cetsa_analysis:0.1 done
+#26 [21/21] WORKDIR /opt/executables
 #26 DONE 0.0s
+
+#27 exporting to image
+#27 exporting layers 0.0s done
+#27 writing image sha256:ec3c54271a6e7fe7a8d092c6fa70de88e2aa3654cb2c148543951aa33fecf4b8 done
+#27 naming to docker.io/polusai/rt_cetsa_analysis:0.1 done
+#27 DONE 0.0s

@@ -66,10 +66,10 @@ print(controlPlot)
 #   convert_zscore
 
 #Derive RSS values for null and alternate model for each compound from full_df
-rss <- compute.rss.models(full_df, rssPlot = TRUE, drPlot = TRUE, plotModel = FALSE)
+rss <- compute.rss.models(full_df, rssPlot = FALSE, drPlot = FALSE, plotModel = FALSE)
 
 #Perform dose-response for each thermogram parameter
-parameters <- compute_parameter.rssmodel(full_df, plotModel = TRUE)
+parameters <- compute_parameter.rssmodel(full_df, plotModel = FALSE)
 
 #Merge these plots for further analysis
 signif.df <- merge(rss, parameters)
@@ -79,7 +79,7 @@ signif.df <- rankOrder(signif.df)
 
 # Volcano plots comparing the different parameters of analysis against the NPARC RSS Difference
 # Colored by significance test and whether the compound passes any.
-plot_volcanos(signif.df)
+plot_volcanos(signif.df, save = FALSE)
 
 # Plot of RSS Differences vs. p-values for NPARC
 rss.pval.plot(signif.df, savePlot = TRUE)

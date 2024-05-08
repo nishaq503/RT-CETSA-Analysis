@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "rt-cetsa-analysis"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+packages = [{include = "rt_cetsa_analysis", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+filepattern = "^2.0.5"
+typer = "^0.12.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

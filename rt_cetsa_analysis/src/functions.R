@@ -801,10 +801,10 @@ dr_analysis <-
               )
             print(dr_plot)
             
+            out <- paste(outdir,'dr_curves', export_label, sep="/")
             png(
               filename = paste(
-                './data/dr_curves/',
-                export_label,
+                out,
                 '_',
                 model_df$compound[i],
                 colnames(temp_df)[n],
@@ -1035,8 +1035,9 @@ plot_volcanos <- function(df, save = TRUE) {
       scale_fill_manual(breaks = fillvalues, values = colors) +
       theme(legend.position = 'bottom')
     print(volcano_plot)
+    out <- paste(outdir,"/",current_param, sep="")
     ggsave(
-      paste('./data/', current_param, '_volcano.png', sep = ''),
+      paste(out, '_volcano.png', sep = ''),
       dpi = 'retina',
       scale = 1.25
     )
@@ -1065,7 +1066,7 @@ rss.pval.plot <- function (df, savePlot = FALSE) {
     )
   print(rss.plot)
   if (savePlot == TRUE) {
-    out <- paste(outdir,'/rssPvalcomp.png')
+    out <- paste(outdir,'/rssPvalcomp.png',sep="")
     ggsave(out,
       dpi = 'retina',
       scale = 1.25
@@ -1133,7 +1134,8 @@ fit_nullmodel <- function(df,
   null.model <- lm(resp ~ 1, data = df)
   #Plot if TRUE. For diagnostic use mostly...
   if (plot.model == TRUE) {
-    try(jpeg(filename = paste('./data/models/', graphTitle, '.jpg', sep =
+    out <- paste(outdir,'models', sep="/")
+    try(jpeg(filename = paste(out, graphTitle, '.jpg', sep =
                                 '')))
     try(plot(
       df$conc,
@@ -1163,7 +1165,8 @@ fit_altmodel <- function(df,
                          graphTitle = '') {
   alt.model <- dr_fit(df)
   if (plot.model == TRUE) {
-    try(jpeg(filename = paste('./data/models/', graphTitle, '.jpg', sep =
+    out <- paste(outdir,'models', sep="/")
+    try(jpeg(filename = paste(out, graphTitle, '.jpg', sep =
                                 '')))
     try(plot(
       alt.model,
