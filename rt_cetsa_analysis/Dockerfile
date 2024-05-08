@@ -2,14 +2,11 @@ FROM r-base:4.4.0
 
 	
 ARG EXEC_DIR="/opt/executables"
-ARG DATA_DIR="/data"
 
 RUN apt-get update && apt-get install -y python3
 
 #Create folders
-RUN mkdir -p /{EXEC_DIR} \
-    && mkdir -p /{DATA_DIR}/csv \
-    && mkdir -p /{DATA_DIR}/outputs
+RUN mkdir -p ${EXEC_DIR}
 
 # Install R packages external dependencies
 RUN apt-get install -y libssl-dev \
@@ -20,19 +17,31 @@ RUN apt-get install -y libssl-dev \
     && apt-get install -y cmake 
 
 # Install required R packages
-ADD requirements/Requirements_1.R /{EXEC_DIR}/Requirements_1.R
-RUN Rscript /{EXEC_DIR}/Requirements_1.R
+ADD requirements/Requirements_1.R ${EXEC_DIR}/Requirements_1.R
+RUN Rscript ${EXEC_DIR}/Requirements_1.R
 
-ADD requirements/Requirements_2.R /{EXEC_DIR}/Requirements_2.R
-RUN Rscript /{EXEC_DIR}/Requirements_2.R
+ADD requirements/Requirements_2.R ${EXEC_DIR}/Requirements_2.R
+RUN Rscript ${EXEC_DIR}/Requirements_2.R
 
-ADD requirements/Requirements_3.R /{EXEC_DIR}/Requirements_3.R
-RUN Rscript /{EXEC_DIR}/Requirements_3.R
+ADD requirements/Requirements_3.R ${EXEC_DIR}/Requirements_3.R
+RUN Rscript ${EXEC_DIR}/Requirements_3.R
 
-#Copy executable
-#TODO FIX extra / in front of EXCEC_DIR (will need to rebuild the whole container!)
-COPY src/ /{EXEC_DIR}/
+RUN apt-get install -y --allow-downgrades libxcb-render0=1.15-1 libxcb-shm0=1.15-1 libxcb1=1.15-1
+RUN apt-get install -y  libcairo2-dev
 
-WORKDIR /{EXEC_DIR}
+ADD requirements/Requirements_4.R ${EXEC_DIR}/Requirements_4.R
+RUN Rscript ${EXEC_DIR}/Requirements_4.R
+
+RUN apt-get install -y libgit2-dev
+
+ADD requirements/Requirements_6.R ${EXEC_DIR}/Requirements_6.R
+RUN Rscript ${EXEC_DIR}/Requirements_6.R
+
+ADD requirements/Requirements_5.R ${EXEC_DIR}/Requirements_5.R
+RUN Rscript ${EXEC_DIR}/Requirements_5.R
+
+COPY src/ ${EXEC_DIR}/
+
+WORKDIR ${EXEC_DIR}
 
 CMD ["Rscript", "main.R"]

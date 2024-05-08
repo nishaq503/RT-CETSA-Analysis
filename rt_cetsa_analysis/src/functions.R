@@ -20,10 +20,10 @@ library(stringr)
 library(drc)
 library(ggthemes)
 library(cowplot)
-# library(hrbrthemes)
+library(hrbrthemes)
 library(ggpubr)
 library(MESS)
-# library(devtools);
+library(devtools)
 # load_all(".");
 #' construct_grid
 #' Construct a grid with compatable headers for MoltenProt file prep
@@ -645,7 +645,8 @@ control_analysis <-
           ncol = 2,
           nrow = 1
         )
-      ggsave('./data/controls.png', dpi = 'retina', scale = 1.5)
+      out <- paste(outdir,'controls.png',sep="/")
+      ggsave(out, dpi = 'retina', scale = 1.5)
       return(control.grid)
     }
     if (output == 'df') {
@@ -799,6 +800,7 @@ dr_analysis <-
                 x = 'Concentration'
               )
             print(dr_plot)
+            
             png(
               filename = paste(
                 './data/dr_curves/',
@@ -1063,7 +1065,8 @@ rss.pval.plot <- function (df, savePlot = FALSE) {
     )
   print(rss.plot)
   if (savePlot == TRUE) {
-    ggsave('./data/models/rssPvalcomp.png',
+    out <- paste(outdir,'/rssPvalcomp.png')
+    ggsave(out,
       dpi = 'retina',
       scale = 1.25
     )
@@ -1302,9 +1305,9 @@ compute.rss.models <-
             x = 'Temperature [C]'
           )
         print(rss.plot)
+        out <- paste(outdir,'models', current.fit.df[1, 1], sep="/")
         ggsave(
-          filename = paste('./data/models/', current.fit.df[1, 1], '_rss.png', sep =
-                             ''),
+          filename = paste(out, '_rss.png', sep =''),
           scale = 1.25,
           dpi = 'retina'
         )
@@ -1367,10 +1370,10 @@ compute_parameter.rssmodel <- function(df, plotModel = FALSE) {
         message('No Effect ANOVA p-val: ', signif(param.rss.df[i, paste(current_param, '.pval', sep =
                                                                           '')]), 1)
         if (plotModel == TRUE) {
+          out <- paste(outdir,'models', param.rss.df[i, 1], sep="/")
           png(
             filename = paste(
-              './data/models/',
-              param.rss.df[i, 1],
+              out,
               '_',
               current_param,
               '.png',
@@ -1435,8 +1438,9 @@ dr.thermogram <- function(df, target = '') {
     ) +
     theme()
   print(dr.plot)
+  out <- paste(outdir,'models', 'dr_', sep="/")
   ggsave(
-    filename = paste('./data/models/dr_', target, '.png', sep = ''),
+    filename = paste(out, target, '.png', sep = ''),
     scale = 1.25,
     dpi = 'retina'
   )
@@ -1506,11 +1510,13 @@ parameter_heatmaps <- function(df, plotHeat = FALSE) {
     )
   if (plotHeat == TRUE) {
     print(pval.heat.plot)
-    ggsave('./data/pval_heatmap.png',
+    out <- paste(outdir, 'pval_heatmap.png' , sep="/")
+    ggsave(out,
            dpi = 'retina',
            scale = 1.25)
     print(ec50.heat.plot)
-    ggsave('./data/ec50_heatmap.png',
+    out <- paste(outdir, 'ec50_heatmap.png' , sep="/")
+    ggsave(out,
            dpi = 'retina',
            scale = 1.25)
   }

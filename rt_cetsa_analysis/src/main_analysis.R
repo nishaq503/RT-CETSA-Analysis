@@ -14,6 +14,20 @@
 # # Main Analysis
 
 library(tidyverse)
+library(readxl)
+library(stringr)
+library(drc)
+library(ggthemes)
+library(cowplot)
+library(hrbrthemes)
+library(ggpubr)
+library(MESS)
+library(devtools)
+
+# BECAUSE OF BUG
+pdf(file = NULL)
+
+
 # EXPERIMENTAL PARAMETERS AND SETUP
 #
 # Input experiment parameters here
@@ -74,6 +88,6 @@ rss.pval.plot(signif.df, savePlot = TRUE)
 parameter_heatmaps(signif.df, plotHeat = TRUE)
 
 #Write out signif.df and full_df
-write.csv(x = full_df, file = './data/full_df.csv')
-write.csv(x = signif.df, file = './data/signif_df.csv')
+write.csv(x = full_df, file = paste(outdir,'full_df.csv',sep="/"))
+write.csv(x = signif.df, file = paste(outdir,'signif_df.csv',sep="/"))
 
