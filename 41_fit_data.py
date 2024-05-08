@@ -38,8 +38,7 @@ def run_model(settings):
     )
     fit.PrepareData()
     fit.ProcessData()
-    out = fit.plate_results
-    return out
+    return fit
 
 
 def evaluate_model(settings):
@@ -56,33 +55,42 @@ exceptions = []
 if __name__ == '__main__':
 
 
-    with concurrent.futures.ProcessPoolExecutor(max_workers=5) as executor:
-        # Start the load operations and mark each future with its URL
-        future_to_settings = {executor.submit(evaluate_model, settings): settings for settings in settings_grid_search}
-        for future in concurrent.futures.as_completed(future_to_settings):
-            settings = future_to_settings[future]
-            try:
-                bs_factor = future.result()
-                print(f"mean BS_factor for settings {settings}: {bs_factor}")
-                if(bs_factor > max_bs_factor):
-                    best_settings = settings
-                    max_bs_factor = bs_factor
-            except Exception as exc:
-                exceptions.append((settings, exc))
+    # with concurrent.futures.ProcessPoolExecutor(max_workers=5) as executor:
+    #     # Start the load operations and mark each future with its URL
+    #     future_to_settings = {executor.submit(evaluate_model, settings): settings for settings in settings_grid_search}
+    #     for future in concurrent.futures.as_completed(future_to_settings):
+    #         settings = future_to_settings[future]
+    #         try:
+    #             bs_factor = future.result()
+    #             print(f"mean BS_factor for settings {settings}: {bs_factor}")
+    #             if(bs_factor > max_bs_factor):
+    #                 best_settings = settings
+    #                 max_bs_factor = bs_factor
+    #         except Exception as exc:
+    #             exceptions.append((settings, exc))
 
-    print(f"best settings: {best_settings}, bs_factor: {max_bs_factor}")
+    # print(f"best settings: {best_settings}, bs_factor: {max_bs_factor}")
 
-    out = run_model(best_settings)
+    baseline_bounds, baseline_fit, sav_gol, trim_max,trim_min = 3, 3, 10, 0, 0 
+    best_settings = baseline_bounds, baseline_fit, sav_gol, trim_max,trim_min
+    fit = run_model(best_settings)
+    out_fit_params = fit.plate_results
+
 
     # sort output by row/col
-    out['ind'] = out.index 
-    out['letter'] = out.apply(lambda row: row.ind[:1], axis=1)
-    out['number'] = out.apply(lambda row: row.ind[1:], axis=1).astype(int)
-    out.drop(columns=['ind'])
-    out = out.sort_values(['letter','number'])
+    out_fit_params['ind'] = out_fit_params.index 
+    out_fit_params['letter'] = out_fit_params.apply(lambda row: row.ind[:1], axis=1)
+    out_fit_params['number'] = out_fit_params.apply(lambda row: row.ind[1:], axis=1).astype(int)
+    out_fit_params.drop(columns=['ind'])
+    out_fit_params = out_fit_params.sort_values(['letter','number'])
 
     # save output
-    output_path = '.data/output/molten_prot_out.csv'
-    out.to_csv(output_path)
-    
-    print(f"results saved to {output_path}")
+    output_path_fit_param = '.data/output/molten_prot_fit_params_out.csv'
+    out_fit_params.to_csv(output_path_fit_param)
+
+    output_path_baseline_corrected = '.data/output/molten_prot_baseline_corrected_out.csv'
+    out_baseline_corrected = fit.plate_raw_corr 
+    out_baseline_corrected.to_csv(output_path_baseline_corrected)
+
+    print(f"fit params saved to {output_path_fit_param}")
+    print(f"corrected baselines saved to {output_path_baseline_corrected}")

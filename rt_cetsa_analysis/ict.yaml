@@ -1,0 +1,14 @@
+author:
+- A B
+contact: a.b@nih.gov
+container: polusai/rt_cetsa_analysis:0.1
+description: RT Cetsa Analysis.
+entrypoint: '[python3, main.py]'
+name: polusai/RT_Cetsa_Analysis
+repository: ""
+version: 0.1
+specVersion: 1.0.0
+inputs:
+outputs:
+title: RT Cetsa Analysis.
+ui:

@@ -37,6 +37,10 @@ library(devtools)
 
 # NOTE this process creates spurious columns that should be removed
 
+curve_df <- read_csv("/Users/antoinegerardin/RT-CETSA-Analysis/test_exp_curve_all.csv",
+show_col_types = FALSE
+)
+
 full_param <- read_csv("/Users/antoinegerardin/RT-CETSA-Analysis/test_exp_param_full.csv",
 show_col_types = FALSE
 )
@@ -96,6 +100,10 @@ kelToCel <- function(df) {
     mutate(Tm_fit = Tm_fit - 273.15) %>%
     mutate(T_onset = T_onset - 273.15)
 }
+
+# TODO move that before for each dataset
+full_df <- full_df %>% dplyr::select(-c('...1')) %>% dplyr::select(-c('...1')) 
+print(names(full_df))
 
 full_df <- kelToCel(full_df)
 
