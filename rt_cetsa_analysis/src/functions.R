@@ -12,6 +12,8 @@
 # # Plate assignment, data cleanup, and functions
 # # Patents: PCT/US21/45184, HHS E-022-2022-0-US-01
 
+print("####### loading all functions used in the analysis...")
+
 library(tidyverse)
 library(readxl)
 library(stringr)
@@ -19,8 +21,8 @@ library(drc)
 library(ggthemes)
 library(cowplot)
 # library(hrbrthemes)
-# library(ggpubr)
-# library(MESS)
+library(ggpubr)
+library(MESS)
 # library(devtools);
 # load_all(".");
 #' construct_grid
@@ -459,6 +461,7 @@ plate_assignment <- function(df, platemap_file) {
 }
 
 # Calculate AUC for each well
+print("####### loading calculate_auc...")
 calculate_auc <- function(df) {
   #Retrieve temperatures to be used for AUC determination.
   auc.df <- df %>%

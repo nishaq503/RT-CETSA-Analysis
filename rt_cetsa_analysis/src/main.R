@@ -56,3 +56,4 @@ loginfo('platemap file (plate metadata): %s', plate_map)
 loginfo('outdir (output directory): %s', outdir)
 
 source('./prepare_data.R')
+source('./main_analysis.R')
