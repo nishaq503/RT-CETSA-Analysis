@@ -1764,7 +1764,7 @@ typer = "^0.7.0"
 type = "git"
 url = "https://github.com/nishaq503/image-tools"
 reference = "feat/rt-cetsa"
-resolved_reference = "2e3756687326da08c15bcf8c97051e2ebe4b6c7c"
+resolved_reference = "76fac7a8bebaa571fbf0f040cbf290dccecd78c8"
 subdirectory = "features/rt-cetsa-intensity-extraction-tool"
 
 [[package]]
@@ -1788,7 +1788,7 @@ typer = "^0.7.0"
 type = "git"
 url = "https://github.com/nishaq503/image-tools"
 reference = "feat/rt-cetsa"
-resolved_reference = "2e3756687326da08c15bcf8c97051e2ebe4b6c7c"
+resolved_reference = "76fac7a8bebaa571fbf0f040cbf290dccecd78c8"
 subdirectory = "segmentation/rt-cetsa-plate-extraction-tool"
 
 [[package]]
