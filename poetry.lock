@@ -1811,7 +1811,7 @@ typer = "^0.7.0"
 type = "git"
 url = "https://github.com/nishaq503/tabular-tools"
 reference = "feat/rt-cetsa-4"
-resolved_reference = "50c468385e1cc67327360e8f1b1030f20acb6ddc"
+resolved_reference = "246083e028bfb095c8685da6e1b1deee4e822c7a"
 subdirectory = "regression/rt-cetsa-moltprot-tool"
 
 [[package]]

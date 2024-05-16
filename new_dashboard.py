@@ -1,10 +1,13 @@
+import math
 import pathlib
 
 import filepattern
 import matplotlib.pyplot as plt
+import numpy
 import pandas
 import solara
 import tifffile
+from scipy.optimize import curve_fit
 
 from polus.images.segmentation.rt_cetsa_plate_extraction.__main__ import (
     main as extract_plates,
@@ -88,7 +91,43 @@ def show_mask(out_dir: pathlib.Path):
     return
 
 
-def show_cell_plot(plate_df: pandas.DataFrame):
+def model(
+    x: float,
+    kn: float,
+    bn: float,
+    ku: float,
+    bu: float,
+    dhm: float,
+    tm: float,
+) -> float:
+    R = 8.31446261815324
+    recip_t_diff = (1 / tm) - (1 / x)
+    exp_term = numpy.exp((dhm / R) * recip_t_diff)
+    # exp_inner = (x - tm * numpy.log(0.01/0.99)) / (t_onset - tm)
+    # exp_term = numpy.exp(exp_inner)
+    numerator = kn * x + bn + (ku * x + bu) * exp_term
+    denominator = 1 + exp_term
+    return numerator / denominator
+
+
+def eq_two_state(
+    temperatures: numpy.ndarray,
+    intensities: numpy.ndarray,
+    p0: numpy.ndarray,
+) -> dict[str, float]:
+    popt, _ = curve_fit(model, temperatures, intensities, method="trf")
+    params = {
+        "kn": float(popt[0]),
+        "bn": float(popt[1]),
+        "ku": float(popt[2]),
+        "bu": float(popt[3]),
+        "dhm": float(popt[4]),
+        "tm": float(popt[5]),
+    }
+    return params
+
+
+def show_cell_plot(plate_df: pandas.DataFrame, moltprot_df: pandas.DataFrame):
     # Select a row and column
     solara.SliderInt(
         "Select column",
@@ -109,11 +148,36 @@ def show_cell_plot(plate_df: pandas.DataFrame):
     cell_name = f"{col}{row_idx}"
     solara.Markdown(f"**Cell name**: {cell_name}")
 
+    moltprot_row = moltprot_df[moltprot_df["ID"] == cell_name]
+    moltprot_row = moltprot_row.drop(columns=["ID"])
+
+    param_names = [
+        "kN_init", "bN_init", "kU_init", "bU_init", "dHm_init", "Tm_init",
+        "kN_fit", "bN_fit", "kU_fit", "bU_fit", "dHm_fit", "Tm_fit",
+        "S", "BS_factor", "T_onset", "dCp_component", "dG_std",
+    ]
+    params = {p: moltprot_row[p].values[0] for p in param_names}
+    temperatures = plate_df["Temperature"].values + 273.15
+    intensities = plate_df[cell_name].values
+    # p0 = [
+    #     params["kN_init"], params["bN_init"], params["kU_init"], params["bU_init"], params["dHm_init"], params["Tm_init"]
+    # ]
+    # params = eq_two_state(temperatures, intensities, numpy.asarray(p0))
+    solara.Markdown(f"params: {params}")
+    curve = [
+        model(t, params["kN_fit"], params["bN_fit"], params["kU_fit"], params["bU_fit"], params["dHm_fit"], params["Tm_fit"])
+        for t in temperatures
+    ]
+    # curve = [
+    #     model(t, params["kn"], params["bn"], params["ku"], params["bu"], params["dhm"], params["tm"])
+    #     for t in temperatures
+    # ]
+
     # Get column from plate.csv
     intensities = plate_df[cell_name].values
-    temperatures = plate_df["Temperature"].values
     fig, ax = plt.subplots()
     ax.scatter(temperatures, intensities)
+    ax.plot(temperatures, curve, color="red")
     ax.set_xlabel("Temperature")
     ax.set_ylabel("Intensity")
     ax.set_title(cell_name)
@@ -202,6 +266,13 @@ def Page():
         pattern="plate.csv",
         preview=False,
         out_dir=out_dir,
+        baseline_fit=15,
+        baseline_bounds=3,
+        dCp=0,
+        onset_threshold=0.01,
+        savgol=10,
+        trim_max=3,
+        trim_min=3,
     ))
     solara.Checkbox(label="Show MoltProt DataFrame", value=show_moltprot_widget)
     if show_moltprot_widget.value:
@@ -216,4 +287,5 @@ def Page():
     solara.Checkbox(label="Show Cell Plot", value=show_cell_widget)
     if show_cell_widget.value:
         plate_df = pandas.read_csv(out_dir / "plate.csv")
-        show_cell_plot(plate_df)
+        moltprot_df = pandas.read_csv(out_dir / "plate_moltprot.csv")
+        show_cell_plot(plate_df, moltprot_df)
