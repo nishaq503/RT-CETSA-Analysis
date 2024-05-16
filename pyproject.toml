@@ -16,6 +16,12 @@ ipykernel = "^6.29.4"
 scipy = "^1.13.0"
 python-dotenv = "^1.0.1"
 filepattern = "^2.0.5"
+numpy = "^1.26.4"
+watchdog = "^4.0.0"
+solara = "^1.32.2"
+pandas = "^2.2.2"
+tifffile = "^2024.5.10"
+markdown = "^3.6"
 
 
 [build-system]
